@@ -1,9 +1,9 @@
 const CACHE_NAME = 'mon-itineraire-cache-v2';
 const APP_SHELL_URLS = [
-  '/',
-  '/index.html',
-  '/manifest.json',
-  '/icon.svg',
+  './',
+  './index.html',
+  './manifest.json',
+  './icon.svg',
 ];
 
 // On install, cache the app shell
