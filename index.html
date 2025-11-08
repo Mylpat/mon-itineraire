@@ -7,6 +7,7 @@
     <link rel="manifest" href="./manifest.json">
     <meta name="theme-color" content="#0c4a6e" />
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
   <script type="importmap">
 {
   "imports": {
@@ -20,6 +21,6 @@
 </head>
   <body class="bg-sky-100">
     <div id="root"></div>
-    <script type="module" src="./index.tsx"></script>
+    <script type="text/babel" data-type="module" src="./index.tsx"></script>
   </body>
 </html>
