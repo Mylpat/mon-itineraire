@@ -1,0 +1,17 @@
+{
+  "name": "Mon itinéraire",
+  "short_name": "Itinéraire",
+  "description": "Une application pour générer des itinéraires personnalisés avec des étapes, des modes de transport, et afficher le résultat sur une carte avec un lien partageable et un QR code.",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#e0f2fe",
+  "theme_color": "#0c4a6e",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
