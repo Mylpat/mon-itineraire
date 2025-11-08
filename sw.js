@@ -4,6 +4,23 @@ const APP_SHELL_URLS = [
   './index.html',
   './manifest.json',
   './icon.svg',
+  './index.tsx',
+  './App.tsx',
+  './types.ts',
+  './services/geminiService.ts',
+  './components/ItineraryForm.tsx',
+  './components/ItineraryDisplay.tsx',
+  './components/SavedItineraries.tsx',
+  './components/icons/ArrowDownIcon.tsx',
+  './components/icons/ArrowUpIcon.tsx',
+  './components/icons/BusIcon.tsx',
+  './components/icons/CarIcon.tsx',
+  './components/icons/LocationIcon.tsx',
+  './components/icons/PlusIcon.tsx',
+  './components/icons/SpinnerIcon.tsx',
+  './components/icons/TrashIcon.tsx',
+  './components/icons/ViewIcon.tsx',
+  './components/icons/WalkIcon.tsx'
 ];
 
 // On install, cache the app shell
