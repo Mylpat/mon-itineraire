@@ -1,12 +1,12 @@
 
 import React, { useState, useEffect } from 'react';
-import ItineraryForm from './components/ItineraryForm';
-import ItineraryDisplay from './components/ItineraryDisplay';
-import SavedItineraries from './components/SavedItineraries';
-import { generateItinerary } from './services/geminiService';
-import type { ItineraryRequest, ItineraryResponse } from './types';
-import { TransportMode } from './types';
-import SpinnerIcon from './components/icons/SpinnerIcon';
+import ItineraryForm from './components/ItineraryForm.tsx';
+import ItineraryDisplay from './components/ItineraryDisplay.tsx';
+import SavedItineraries from './components/SavedItineraries.tsx';
+import { generateItinerary } from './services/geminiService.ts';
+import type { ItineraryRequest, ItineraryResponse } from './types.ts';
+import { TransportMode } from './types.ts';
+import SpinnerIcon from './components/icons/SpinnerIcon.tsx';
 
 export default function App(): React.ReactElement {
   const [initialFormState] = useState<ItineraryRequest>({

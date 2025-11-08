@@ -1,4 +1,4 @@
-import type { ItineraryRequest, ItineraryResponse } from '../types';
+import type { ItineraryRequest, ItineraryResponse } from '../types.ts';
 
 /**
  * Génère une réponse d'itinéraire statique.

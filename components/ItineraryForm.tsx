@@ -1,15 +1,15 @@
 
 import React, { useState, useCallback } from 'react';
-import { TransportMode } from '../types';
-import type { ItineraryRequest, Coordinates } from '../types';
-import CarIcon from './icons/CarIcon';
-import WalkIcon from './icons/WalkIcon';
-import BusIcon from './icons/BusIcon';
-import LocationIcon from './icons/LocationIcon';
-import PlusIcon from './icons/PlusIcon';
-import TrashIcon from './icons/TrashIcon';
-import ArrowUpIcon from './icons/ArrowUpIcon';
-import ArrowDownIcon from './icons/ArrowDownIcon';
+import { TransportMode } from '../types.ts';
+import type { ItineraryRequest, Coordinates } from '../types.ts';
+import CarIcon from './icons/CarIcon.tsx';
+import WalkIcon from './icons/WalkIcon.tsx';
+import BusIcon from './icons/BusIcon.tsx';
+import LocationIcon from './icons/LocationIcon.tsx';
+import PlusIcon from './icons/PlusIcon.tsx';
+import TrashIcon from './icons/TrashIcon.tsx';
+import ArrowUpIcon from './icons/ArrowUpIcon.tsx';
+import ArrowDownIcon from './icons/ArrowDownIcon.tsx';
 
 interface ItineraryFormProps {
   initialState: ItineraryRequest;

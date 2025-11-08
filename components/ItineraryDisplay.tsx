@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import type { ItineraryResponse, ItineraryRequest } from '../types';
-import { TransportMode } from '../types';
+import type { ItineraryResponse, ItineraryRequest } from '../types.ts';
+import { TransportMode } from '../types.ts';
 
 interface ItineraryDisplayProps {
   request: ItineraryRequest;

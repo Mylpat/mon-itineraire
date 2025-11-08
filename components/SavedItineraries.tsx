@@ -1,8 +1,8 @@
 
 import React from 'react';
-import type { ItineraryRequest, ItineraryResponse } from '../types';
-import ViewIcon from './icons/ViewIcon';
-import TrashIcon from './icons/TrashIcon';
+import type { ItineraryRequest, ItineraryResponse } from '../types.ts';
+import ViewIcon from './icons/ViewIcon.tsx';
+import TrashIcon from './icons/TrashIcon.tsx';
 
 interface SavedItinerariesProps {
   itineraries: { request: ItineraryRequest; response: ItineraryResponse }[];
