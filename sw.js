@@ -1,4 +1,4 @@
-const CACHE_NAME = 'mon-itineraire-cache-v6'; // Incrémenter la version pour forcer la mise à jour
+const CACHE_NAME = 'mon-itineraire-cache-v7'; // Incrémenter la version pour forcer la mise à jour
 const APP_FILES = [
   './',
   './index.html',
@@ -45,25 +45,23 @@ self.addEventListener('activate', event => {
   );
 });
 
-// Intercepter les requêtes réseau
+// Intercepter les requêtes réseau avec la stratégie "Stale-While-Revalidate"
 self.addEventListener('fetch', event => {
-  const { request } = event;
-
-  // Stratégie "Network falling back to cache"
-  // On essaie d'abord le réseau pour avoir les données les plus fraîches.
-  // Si le réseau échoue (hors ligne), on se rabat sur le cache.
   event.respondWith(
-    fetch(request)
-      .then(networkResponse => {
-        // Si la requête réussit, on met la nouvelle version en cache
-        return caches.open(CACHE_NAME).then(cache => {
-          cache.put(request, networkResponse.clone());
+    caches.open(CACHE_NAME).then(cache => {
+      return cache.match(event.request).then(response => {
+        const fetchPromise = fetch(event.request).then(networkResponse => {
+          // Si la requête réseau réussit, on met à jour le cache
+          if (networkResponse && networkResponse.status === 200) {
+              cache.put(event.request, networkResponse.clone());
+          }
           return networkResponse;
         });
-      })
-      .catch(() => {
-        // Si le réseau échoue, on cherche dans le cache
-        return caches.match(request);
-      })
+
+        // Retourner la réponse du cache si elle existe (pour un chargement rapide/hors-ligne),
+        // sinon attendre la réponse du réseau. La prochaine fois, ce sera en cache.
+        return response || fetchPromise;
+      });
+    })
   );
 });
