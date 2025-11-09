@@ -1,29 +1,15 @@
-const CACHE_NAME = 'mon-itineraire-cache-v2';
+// Importer Babel pour la transpilation
+importScripts('https://unpkg.com/@babel/standalone/babel.min.js');
+
+const CACHE_NAME = 'mon-itineraire-cache-v3'; // Incrémenter la version pour forcer la mise à jour
 const APP_SHELL_URLS = [
   './',
   './index.html',
   './manifest.json',
-  './icon.svg',
-  './index.tsx',
-  './App.tsx',
-  './types.ts',
-  './services/geminiService.ts',
-  './components/ItineraryForm.tsx',
-  './components/ItineraryDisplay.tsx',
-  './components/SavedItineraries.tsx',
-  './components/icons/ArrowDownIcon.tsx',
-  './components/icons/ArrowUpIcon.tsx',
-  './components/icons/BusIcon.tsx',
-  './components/icons/CarIcon.tsx',
-  './components/icons/LocationIcon.tsx',
-  './components/icons/PlusIcon.tsx',
-  './components/icons/SpinnerIcon.tsx',
-  './components/icons/TrashIcon.tsx',
-  './components/icons/ViewIcon.tsx',
-  './components/icons/WalkIcon.tsx'
+  './icon.svg'
 ];
 
-// On install, cache the app shell
+// À l'installation, mettre en cache les fichiers de base de l'application (l'App Shell)
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME)
@@ -32,55 +18,74 @@ self.addEventListener('install', event => {
   );
 });
 
-// On activate, clean up old caches
+// À l'activation, nettoyer les anciens caches
 self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys().then(cacheNames => {
       return Promise.all(
-        cacheNames.filter(cacheName => cacheName !== CACHE_NAME)
-                   .map(cacheName => caches.delete(cacheName))
+        cacheNames
+          .filter(cacheName => cacheName.startsWith('mon-itineraire-cache-') && cacheName !== CACHE_NAME)
+          .map(cacheName => caches.delete(cacheName))
       );
-    }).then(() => self.clients.claim())
+    }).then(() => self.clients.claim()) // Prendre le contrôle de la page immédiatement
   );
 });
 
-// On fetch, use a cache-first strategy
+/**
+ * Fonction principale pour intercepter, transpiler, mettre en cache et servir les fichiers TSX/TS.
+ * @param {FetchEvent} event - L'événement fetch intercepté.
+ * @returns {Promise<Response>} Une promesse qui se résout avec la réponse (transpilée ou non).
+ */
+async function transpileAndCache(event) {
+  const { request } = event;
+  const url = new URL(request.url);
+
+  // D'abord, vérifier si une version déjà transpilée est dans le cache
+  const cache = await caches.open(CACHE_NAME);
+  const cachedResponse = await cache.match(request);
+  if (cachedResponse) {
+    return cachedResponse;
+  }
+
+  // Si non, récupérer le fichier source (.tsx ou .ts)
+  const networkResponse = await fetch(request);
+  const code = await networkResponse.text();
+
+  // Le transpiler avec Babel
+  const transpiled = Babel.transform(code, {
+    presets: ['react', 'typescript'],
+    filename: url.pathname // Important pour que Babel sache comment parser le fichier
+  }).code;
+
+  // Créer une nouvelle réponse avec le code transpilé et le bon type de contenu
+  const responseToCache = new Response(transpiled, {
+    headers: { 'Content-Type': 'application/javascript' }
+  });
+
+  // Mettre cette nouvelle réponse transpilée en cache pour les prochaines fois
+  await cache.put(request, responseToCache.clone());
+
+  // Retourner la réponse transpilée
+  return responseToCache;
+}
+
+// Intercepter toutes les requêtes réseau
 self.addEventListener('fetch', event => {
   const { request } = event;
-
-  // Always bypass for non-GET requests
-  if (request.method !== 'GET') {
-    return;
-  }
-
-  // Always fetch API requests from the network
-  if (request.url.includes('generativelanguage.googleapis.com')) {
-    event.respondWith(fetch(request));
-    return;
-  }
+  const url = new URL(request.url);
   
-  event.respondWith(
-    caches.match(request).then(cachedResponse => {
-      // Return cached response if found
-      if (cachedResponse) {
-        return cachedResponse;
-      }
-
-      // If not in cache, fetch from network, cache it, and return it
-      return fetch(request).then(networkResponse => {
-        // Check for a valid response to cache
-        if (networkResponse && networkResponse.status === 200) {
-          const responseToCache = networkResponse.clone();
-          caches.open(CACHE_NAME).then(cache => {
-            cache.put(request, responseToCache);
-          });
-        }
-        return networkResponse;
-      }).catch(error => {
-        console.error('Fetching failed:', error);
-        // You could return a custom offline page here if you had one
-        throw error;
-      });
-    })
-  );
+  // Si la requête est pour un fichier .tsx ou .ts de notre application
+  if (request.method === 'GET' && url.origin === self.location.origin && (url.pathname.endsWith('.tsx') || url.pathname.endsWith('.ts'))) {
+    // Utiliser notre logique de transpilation
+    event.respondWith(transpileAndCache(event));
+  } else {
+    // Pour tous les autres fichiers (HTML, SVG, CDN, etc.), utiliser une stratégie de cache simple
+    event.respondWith(
+      caches.match(request).then(cachedResponse => {
+        // Si le fichier est en cache, le servir
+        // Sinon, le récupérer sur le réseau
+        return cachedResponse || fetch(request);
+      })
+    );
+  }
 });
