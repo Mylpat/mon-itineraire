@@ -94,7 +94,7 @@ export default function App(): React.ReactElement {
         const updatedItineraries = savedItineraries.filter(item => item.request.name !== name);
         localStorage.setItem('savedItineraries', JSON.stringify(updatedItineraries));
         setSavedItineraries(updatedItineraries);
-        if (submittedRequest?.name === name) {
+        if (submittedRequest && submittedRequest.name === name) {
             setItineraryResponse(null);
             setSubmittedRequest(null);
         }

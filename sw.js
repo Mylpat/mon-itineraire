@@ -1,7 +1,7 @@
 // Importer Babel pour la transpilation
 importScripts('https://unpkg.com/@babel/standalone/babel.min.js');
 
-const CACHE_NAME = 'mon-itineraire-cache-v3'; // Incrémenter la version pour forcer la mise à jour
+const CACHE_NAME = 'mon-itineraire-cache-v4'; // Incrémenter la version pour forcer la mise à jour
 const APP_SHELL_URLS = [
   './',
   './index.html',
