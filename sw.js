@@ -53,7 +53,7 @@ async function transpileAndCache(event) {
 
   // Le transpiler avec Babel
   const transpiled = Babel.transform(code, {
-    presets: ['react', 'typescript'],
+    presets: ['env', 'react', 'typescript'], // Ajout de 'env' pour la compatibilité navigateur
     filename: url.pathname // Important pour que Babel sache comment parser le fichier
   }).code;
 
